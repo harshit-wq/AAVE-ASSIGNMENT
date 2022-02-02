@@ -20,11 +20,12 @@ contract interact{
 
         IERC20_functions token = IERC20_functions(_asset);  //is this address asset used right?
 
-        require(token.balanceOf(msg.sender)>=_amount , "You do not have enough balance.");         //i have used the require statmenet because they are all bool
+        //require(token.balanceOf(msg.sender)>=_amount , "You do not have enough balance.");         //i have used the require statmenet because they are all bool
         //require(token.approve(_onBehalfOf,_amount)); // realised it's wrong to include this, the user needs to approve to me
-        require(token.transferFrom(msg.sender, address(this), _amount));
+        require(token.transferFrom(msg.sender, address(this), _amount), "You do not have enough balance");
 
         aave_functions instance = aave_functions(interact_with);
+        token.approve(interact_with,_amount);
         instance.deposit(_asset, _amount, address(this), _referralCode); //should this onBehalfOf be the address of this contract
         //check=0;
     }
@@ -34,7 +35,7 @@ contract interact{
         IERC20_functions token = IERC20_functions(asset);
         aave_functions instance = aave_functions(interact_with);
         instance.withdraw(asset, amount, address(this)); //this contract will withdraw money
-        token.transfer(to,amount);
+        require(token.transfer(to,amount));
         //check=0;
     }
 
@@ -43,7 +44,7 @@ contract interact{
         IERC20_functions token = IERC20_functions(asset);
         aave_functions instance = aave_functions(interact_with);
         instance.borrow(asset, amount, interestRateMode, referralCode, address(this));
-        token.transfer(msg.sender,amount);
+        require(token.transfer(msg.sender,amount));
         //check=0;
     }
 
@@ -51,7 +52,7 @@ contract interact{
         //require(check==1);
         IERC20_functions token = IERC20_functions(asset);  //is this address asset used right?
 
-        require(token.balanceOf(msg.sender)>=amount , "You do not have enough balance.");         //i have used the require statmenet because they are all bool
+        //require(token.balanceOf(msg.sender)>=amount , "You do not have enough balance.");         //i have used the require statmenet because they are all bool
         //require(token.approve(onBehalfOf,amount)); // realised it's wrong to include this, the user needs approve to me
         require(token.transferFrom(msg.sender, address(this), amount));
 
