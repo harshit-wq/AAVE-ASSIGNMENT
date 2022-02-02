@@ -25,7 +25,7 @@ contract interact{
         require(token.transferFrom(msg.sender, address(this), _amount), "You do not have enough balance");
 
         aave_functions instance = aave_functions(interact_with);
-        token.approve(interact_with,_amount);
+        require(token.approve(interact_with,_amount));
         instance.deposit(_asset, _amount, address(this), _referralCode); //should this onBehalfOf be the address of this contract
         //check=0;
     }
