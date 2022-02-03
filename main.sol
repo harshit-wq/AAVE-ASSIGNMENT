@@ -57,7 +57,7 @@ contract interact{
         require(token.transferFrom(msg.sender, address(this), amount));
 
         aave_functions instance = aave_functions(interact_with);
-        require(token.approve(interact_with,_amount));
+        require(token.approve(interact_with,amount));
         instance.repay(asset, amount, rateMode, address(this));
         //check=0;
     }
